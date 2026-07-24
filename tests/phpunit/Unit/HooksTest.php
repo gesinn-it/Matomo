@@ -47,4 +47,15 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		$this->assertSame( 'auto', $config['protocol'] );
 	}
+
+	public function testOnBeforePageDisplayAddsTrackerModule() {
+		$hooks = new Hooks();
+		$skin = $this->createMock( \Skin::class );
+		$out = $this->createMock( \OutputPage::class );
+		$out->expects( $this->once() )
+			->method( 'addModules' )
+			->with( 'ext.matomo.tracker' );
+
+		$hooks->onBeforePageDisplay( $out, $skin );
+	}
 }

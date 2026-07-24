@@ -4,14 +4,16 @@ declare( strict_types=1 );
 
 namespace MediaWiki\Extension\Matomo;
 
+use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\SkinAfterBottomScriptsHook;
 use MediaWiki\MediaWikiServices;
+use OutputPage;
 use Skin;
 
 /**
  * Hooks for the Matomo extension
  */
-class Hooks implements SkinAfterBottomScriptsHook {
+class Hooks implements BeforePageDisplayHook, SkinAfterBottomScriptsHook {
 
 	/**
 	 * Placeholder hook implementation. Tracking output is added in a later phase.
@@ -20,6 +22,16 @@ class Hooks implements SkinAfterBottomScriptsHook {
 	 * @param string &$text
 	 */
 	public function onSkinAfterBottomScripts( $skin, &$text ): void {
+	}
+
+	/**
+	 * Loads the ext.matomo.tracker ResourceLoader module on every page.
+	 *
+	 * @param OutputPage $out
+	 * @param Skin $skin
+	 */
+	public function onBeforePageDisplay( $out, $skin ): void {
+		$out->addModules( 'ext.matomo.tracker' );
 	}
 
 	/**

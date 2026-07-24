@@ -4,8 +4,10 @@
 		"lint:js": "eslint --cache .",
 		"lint:css": "stylelint --allow-empty-input '**/*.less'",
 		"lint:i18n": "banana-checker i18n/",
-		"test": "npm -s run lint:css && npm -s run lint:js && npm -s run lint:i18n",
-		"test-coverage": "npm -s run test"
+		"node-qunit": "qunit --require ./tests/node-qunit/setup.js tests/node-qunit/**/*.test.js",
+		"node-qunit-coverage": "nyc --report-dir ./coverage/js --reporter=text --reporter=html --reporter=clover --all --include='resources/**' npm run node-qunit",
+		"test": "npm -s run lint:css && npm -s run lint:js && npm -s run lint:i18n && npm -s run node-qunit",
+		"test-coverage": "npm -s run lint:css && npm -s run lint:js && npm -s run lint:i18n && npm -s run node-qunit-coverage"
 	},
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.22.1",
@@ -13,11 +15,15 @@
 		"grunt-banana-checker": "0.10.0",
 		"grunt-eslint": "24.0.0",
 		"grunt-stylelint": "0.17.0",
+		"jsdom": "22.1.0",
+		"nyc": "15.1.0",
+		"qunit": "2.20.0",
 		"stylelint-config-wikimedia": "0.13.0"
 	},
 	"eslintIgnore": [
 		"vendor/**",
 		"build/**",
-		"coverage/**"
+		"coverage/**",
+		"docs/**"
 	]
 }

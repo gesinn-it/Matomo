@@ -1,8 +1,9 @@
 /*
- * Placeholder ResourceLoader module for Matomo pageview tracking.
- * Tracker config (url, idSite, protocol) is available via config.json;
- * the actual tracking snippet is implemented in a later phase.
+ * ResourceLoader entry point: wires the tracker config supplied by
+ * MediaWiki\Extension\Matomo\Hooks::getTrackerConfig (via config.json)
+ * into the tracking logic in track.js.
  */
-var config = require( './config.json' );
+const config = require( './config.json' );
+const track = require( './track.js' ).track;
 
-module.exports = config;
+track( config );

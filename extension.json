@@ -25,12 +25,14 @@
 		}
 	},
 	"Hooks": {
+		"BeforePageDisplay": "Matomo",
 		"SkinAfterBottomScripts": "Matomo"
 	},
 	"ResourceModules": {
 		"ext.matomo.tracker": {
 			"packageFiles": [
 				"tracker.js",
+				"track.js",
 				{
 					"name": "config.json",
 					"callback": "MediaWiki\\Extension\\Matomo\\Hooks::getTrackerConfig"

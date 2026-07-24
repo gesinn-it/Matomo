@@ -1,0 +1,10 @@
+{
+	"env": {
+		"node": true,
+		"qunit": true
+	},
+	"rules": {
+		"mediawiki/valid-package-file-require": "off",
+		"no-underscore-dangle": "off"
+	}
+}
