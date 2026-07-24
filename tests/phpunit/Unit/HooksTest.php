@@ -49,13 +49,55 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	}
 
 	public function testOnBeforePageDisplayAddsTrackerModule() {
+		$this->setMwGlobals( 'wgMatomoIgnoreGroups', [ 'bot', 'sysop' ] );
+		$this->setService( 'UserGroupManager', $this->newUserGroupManagerReturning( [] ) );
+
 		$hooks = new Hooks();
 		$skin = $this->createMock( \Skin::class );
 		$out = $this->createMock( \OutputPage::class );
+		$out->method( 'getUser' )->willReturn( $this->createMock( \MediaWiki\User\UserIdentity::class ) );
 		$out->expects( $this->once() )
 			->method( 'addModules' )
 			->with( 'ext.matomo.tracker' );
 
 		$hooks->onBeforePageDisplay( $out, $skin );
+	}
+
+	public function testOnBeforePageDisplaySkipsTrackerModuleForIgnoredGroup() {
+		$this->setMwGlobals( 'wgMatomoIgnoreGroups', [ 'bot', 'sysop' ] );
+		$this->setService( 'UserGroupManager', $this->newUserGroupManagerReturning( [ 'bot' ] ) );
+
+		$hooks = new Hooks();
+		$skin = $this->createMock( \Skin::class );
+		$out = $this->createMock( \OutputPage::class );
+		$out->method( 'getUser' )->willReturn( $this->createMock( \MediaWiki\User\UserIdentity::class ) );
+		$out->expects( $this->never() )->method( 'addModules' );
+
+		$hooks->onBeforePageDisplay( $out, $skin );
+	}
+
+	public function testOnBeforePageDisplayAddsTrackerModuleWhenIgnoreGroupsIsEmpty() {
+		$this->setMwGlobals( 'wgMatomoIgnoreGroups', [] );
+		$this->setService( 'UserGroupManager', $this->newUserGroupManagerReturning( [ 'bot' ] ) );
+
+		$hooks = new Hooks();
+		$skin = $this->createMock( \Skin::class );
+		$out = $this->createMock( \OutputPage::class );
+		$out->method( 'getUser' )->willReturn( $this->createMock( \MediaWiki\User\UserIdentity::class ) );
+		$out->expects( $this->once() )
+			->method( 'addModules' )
+			->with( 'ext.matomo.tracker' );
+
+		$hooks->onBeforePageDisplay( $out, $skin );
+	}
+
+	/**
+	 * @param string[] $effectiveGroups
+	 * @return \MediaWiki\User\UserGroupManager
+	 */
+	private function newUserGroupManagerReturning( array $effectiveGroups ) {
+		$userGroupManager = $this->createMock( \MediaWiki\User\UserGroupManager::class );
+		$userGroupManager->method( 'getUserEffectiveGroups' )->willReturn( $effectiveGroups );
+		return $userGroupManager;
 	}
 }

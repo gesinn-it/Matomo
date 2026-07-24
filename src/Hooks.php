@@ -7,6 +7,7 @@ namespace MediaWiki\Extension\Matomo;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\SkinAfterBottomScriptsHook;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserIdentity;
 use OutputPage;
 use Skin;
 
@@ -25,13 +26,35 @@ class Hooks implements BeforePageDisplayHook, SkinAfterBottomScriptsHook {
 	}
 
 	/**
-	 * Loads the ext.matomo.tracker ResourceLoader module on every page.
+	 * Loads the ext.matomo.tracker ResourceLoader module on every page,
+	 * unless the current user belongs to a group listed in
+	 * $wgMatomoIgnoreGroups.
 	 *
 	 * @param OutputPage $out
 	 * @param Skin $skin
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
+		if ( $this->isUserIgnored( $out->getUser() ) ) {
+			return;
+		}
 		$out->addModules( 'ext.matomo.tracker' );
+	}
+
+	/**
+	 * Checks whether the given user belongs to a group listed in
+	 * $wgMatomoIgnoreGroups and should therefore be excluded from tracking.
+	 *
+	 * @param UserIdentity $user
+	 * @return bool
+	 */
+	private function isUserIgnored( UserIdentity $user ): bool {
+		$ignoredGroups = MediaWikiServices::getInstance()->getMainConfig()->get( 'MatomoIgnoreGroups' );
+		if ( !$ignoredGroups ) {
+			return false;
+		}
+
+		$userGroups = MediaWikiServices::getInstance()->getUserGroupManager()->getUserEffectiveGroups( $user );
+		return (bool)array_intersect( $ignoredGroups, $userGroups );
 	}
 
 	/**

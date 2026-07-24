@@ -51,6 +51,9 @@
 		},
 		"MatomoProtocol": {
 			"value": "auto"
+		},
+		"MatomoIgnoreGroups": {
+			"value": [ "bot", "sysop" ]
 		}
 	},
 	"load_composer_autoloader": true,
