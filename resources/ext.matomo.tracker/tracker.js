@@ -1,4 +1,8 @@
 /*
  * Placeholder ResourceLoader module for Matomo pageview tracking.
- * Implemented in a later phase — see project issues for scope.
+ * Tracker config (url, idSite, protocol) is available via config.json;
+ * the actual tracking snippet is implemented in a later phase.
  */
+var config = require( './config.json' );
+
+module.exports = config;

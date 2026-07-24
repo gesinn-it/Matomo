@@ -21,4 +21,30 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		$this->assertSame( '', $text );
 	}
+
+	public function testGetTrackerConfigReturnsConfiguredValues() {
+		$this->setMwGlobals( [
+			'wgMatomoURL' => 'matomo.example.org',
+			'wgMatomoIDSite' => '3',
+			'wgMatomoProtocol' => 'https',
+		] );
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertSame( [
+			'url' => 'matomo.example.org',
+			'idSite' => '3',
+			'protocol' => 'https',
+		], $config );
+	}
+
+	public function testGetTrackerConfigDefaultsProtocolToAuto() {
+		$this->setMwGlobals( [
+			'wgMatomoURL' => 'matomo.example.org',
+			'wgMatomoIDSite' => '3',
+			'wgMatomoProtocol' => 'auto',
+		] );
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertSame( 'auto', $config['protocol'] );
+	}
 }

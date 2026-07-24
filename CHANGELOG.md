@@ -8,5 +8,6 @@ This project adheres to [Semantic Versioning](https://semver.org/) and
 
 ### Added
 - Initial repository scaffold: extension skeleton, PHPCS/Phan/PHPUnit tooling, docker-compose-ci integration, DOCSMP-based documentation build.
+- Add `$wgMatomoURL`, `$wgMatomoIDSite`, `$wgMatomoProtocol` configuration, delivered to the `ext.matomo.tracker` ResourceLoader module via a `packageFiles` callback ([#1](https://github.com/gesinn-it/Matomo/issues/1))
 
 [Unreleased]: https://github.com/gesinn-it/Matomo/compare/main...HEAD

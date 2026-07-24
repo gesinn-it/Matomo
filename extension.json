@@ -27,12 +27,28 @@
 	"Hooks": {
 		"SkinAfterBottomScripts": "Matomo"
 	},
+	"ResourceModules": {
+		"ext.matomo.tracker": {
+			"packageFiles": [
+				"tracker.js",
+				{
+					"name": "config.json",
+					"callback": "MediaWiki\\Extension\\Matomo\\Hooks::getTrackerConfig"
+				}
+			],
+			"localBasePath": "resources/ext.matomo.tracker",
+			"remoteExtPath": "Matomo/resources/ext.matomo.tracker"
+		}
+	},
 	"config": {
 		"MatomoURL": {
 			"value": ""
 		},
 		"MatomoIDSite": {
 			"value": ""
+		},
+		"MatomoProtocol": {
+			"value": "auto"
 		}
 	},
 	"load_composer_autoloader": true,
