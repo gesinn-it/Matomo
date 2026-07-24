@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alexander Gesinn"
+		]
+	},
+	"matomo-desc": "Privacy-friendly Matomo pageview tracking for MediaWiki"
+}

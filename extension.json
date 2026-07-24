@@ -1,0 +1,40 @@
+{
+	"name": "Matomo",
+	"version": "0.1.0",
+	"author": [
+		"Alexander Gesinn (gesinn.it GmbH & Co. KG)"
+	],
+	"url": "https://github.com/gesinn-it/Matomo",
+	"descriptionmsg": "matomo-desc",
+	"license-name": "GPL-2.0-or-later",
+	"type": "other",
+	"requires": {
+		"MediaWiki": ">= 1.35.0"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\Matomo\\": "./src/"
+	},
+	"MessagesDirs": {
+		"Matomo": [
+			"i18n"
+		]
+	},
+	"HookHandlers": {
+		"Matomo": {
+			"class": "MediaWiki\\Extension\\Matomo\\Hooks"
+		}
+	},
+	"Hooks": {
+		"SkinAfterBottomScripts": "Matomo"
+	},
+	"config": {
+		"MatomoURL": {
+			"value": ""
+		},
+		"MatomoIDSite": {
+			"value": ""
+		}
+	},
+	"load_composer_autoloader": true,
+	"manifest_version": 2
+}

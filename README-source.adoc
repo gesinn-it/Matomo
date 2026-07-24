@@ -1,0 +1,36 @@
+include::docs/attributes.adoc[]
+= {project_name}
+
+image:https://github.com/gesinn-it/Matomo/actions/workflows/ci.yml/badge.svg[CI,link=https://github.com/gesinn-it/Matomo/actions/workflows/ci.yml]
+image:https://codecov.io/gh/gesinn-it/Matomo/graph/badge.svg[Coverage,link=https://codecov.io/gh/gesinn-it/Matomo]
+
+Matomo is a MediaWiki extension that adds privacy-friendly Matomo pageview
+tracking. It tracks only which pages are viewed, how often, and in what
+sequence — no personally identifiable information is collected.
+
+== Documentation
+
+For Matomo itself see https://matomo.org[matomo.org].
+
+== Testing
+
+Local testing and CI are supported by Docker and Make:
+
+[source,console]
+----
+make ci
+----
+
+== Author(s)
+
+* The https://gesinn.it[*gesinn*.it] team
+* and https://github.com/gesinn-it/Matomo/graphs/contributors[others]
+
+include::docs/gesinn-it-docs-master-pub/sections/universal/semver-policy.adoc[]
+
+== Contributing
+
+See link:docs/CONTRIBUTING.adoc[Contributing Guidelines].
+
+---
+This extension is part of https://semantic.wiki/core[*semantic::core*] - Enterprise Class MediaWiki distribution.
