@@ -1,0 +1,68 @@
+// THIS FILE IS AUTO-GENERATED.
+// Edit README-source.adoc instead.
+
+:project_name: Matomo
+:project_type: mediawiki
+:phan:
+= {project_name}
+
+image:https://github.com/gesinn-it/Matomo/actions/workflows/ci.yml/badge.svg[CI,link=https://github.com/gesinn-it/Matomo/actions/workflows/ci.yml]
+image:https://codecov.io/gh/gesinn-it/Matomo/graph/badge.svg[Coverage,link=https://codecov.io/gh/gesinn-it/Matomo]
+
+Matomo is a MediaWiki extension that adds privacy-friendly Matomo pageview
+tracking. It tracks only which pages are viewed, how often, and in what
+sequence — no personally identifiable information is collected.
+
+== Documentation
+
+For Matomo itself see https://matomo.org[matomo.org].
+
+== Testing
+
+Local testing and CI are supported by Docker and Make:
+
+[source,console]
+----
+make ci
+----
+
+== Author(s)
+
+* The https://gesinn.it[*gesinn*.it] team
+* and https://github.com/gesinn-it/Matomo/graphs/contributors[others]
+
+== Versioning and Releases
+
+'''
+
+*Versioning Convention — Semantic Versioning*
+
+This project follows https://semver.org/[Semantic Versioning].
+
+Version numbers follow the format:
+
+`MAJOR.MINOR.PATCH`
+
+Version increment rules:
+
+* MAJOR — incompatible or breaking changes
+* MINOR — backwards-compatible feature additions
+* PATCH — backwards-compatible bug fixes
+
+Breaking changes include (but are not limited to):
+
+* incompatible API changes
+* removal or renaming of public interfaces
+* behavior changes that may break existing integrations
+* increased minimum runtime or dependency requirements
+* incompatible configuration or data format changes
+* dependency upgrades that introduce breaking changes for users
+
+Breaking changes must always increment the MAJOR version.
+
+== Contributing
+
+See link:docs/CONTRIBUTING.adoc[Contributing Guidelines].
+
+---
+This extension is part of https://semantic.wiki/core[*semantic::core*] - Enterprise Class MediaWiki distribution.
