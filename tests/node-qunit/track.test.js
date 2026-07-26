@@ -96,3 +96,35 @@ QUnit.test( 'track passes the search category to trackSiteSearch when present', 
 
 	assert.deepEqual( window._paq[ 0 ], [ 'trackSiteSearch', 'wiki', 'advanced', 0 ] );
 } );
+
+QUnit.test( 'track appends customJs entries to _paq after the core commands', ( assert ) => {
+	track( {
+		url: 'matomo.example.org',
+		idSite: '3',
+		protocol: 'https',
+		customJs: [
+			[ 'setDocumentTitle', 'custom title' ],
+			[ 'trackEvent', 'category', 'action' ]
+		]
+	} );
+
+	assert.deepEqual( window._paq, [
+		[ 'trackPageView' ],
+		[ 'enableLinkTracking' ],
+		[ 'setTrackerUrl', 'https://matomo.example.org/matomo.php' ],
+		[ 'setSiteId', '3' ],
+		[ 'setDocumentTitle', 'custom title' ],
+		[ 'trackEvent', 'category', 'action' ]
+	] );
+} );
+
+QUnit.test( 'track does not push anything extra when customJs is absent or empty', ( assert ) => {
+	track( { url: 'matomo.example.org', idSite: '3', protocol: 'https', customJs: [] } );
+
+	assert.deepEqual( window._paq, [
+		[ 'trackPageView' ],
+		[ 'enableLinkTracking' ],
+		[ 'setTrackerUrl', 'https://matomo.example.org/matomo.php' ],
+		[ 'setSiteId', '3' ]
+	] );
+} );

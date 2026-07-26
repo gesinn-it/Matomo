@@ -24,12 +24,14 @@ const resolveBaseUrl = function ( config ) {
  * Does nothing if the extension has not been configured with a Matomo
  * URL and site ID. Pushes a trackSiteSearch command instead of the
  * default trackPageView when config.search is set (Special:Search).
+ * Appends any admin-configured customJs entries after the core commands.
  *
  * @param {Object} config
  * @param {Object|null} [config.search]
  * @param {string} [config.search.term]
  * @param {string|null} [config.search.category]
  * @param {number} [config.search.count]
+ * @param {Array[]} [config.customJs]
  */
 const track = function ( config ) {
 	if ( !config.url || !config.idSite ) {
@@ -52,6 +54,7 @@ const track = function ( config ) {
 	paq.push( [ 'enableLinkTracking' ] );
 	paq.push( [ 'setTrackerUrl', baseUrl + '/matomo.php' ] );
 	paq.push( [ 'setSiteId', config.idSite ] );
+	( config.customJs || [] ).forEach( ( entry ) => paq.push( entry ) );
 
 	const script = document.createElement( 'script' );
 	script.async = true;

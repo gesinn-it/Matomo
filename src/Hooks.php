@@ -145,6 +145,7 @@ class Hooks implements
 			'idSite' => $config->get( 'MatomoIDSite' ),
 			'protocol' => $config->get( 'MatomoProtocol' ),
 			'search' => self::getSearchConfig(),
+			'customJs' => $config->get( 'MatomoCustomJS' ),
 		];
 	}
 

@@ -40,6 +40,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'idSite' => '3',
 			'protocol' => 'https',
 			'search' => null,
+			'customJs' => [],
 		], $config );
 	}
 
@@ -52,6 +53,24 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$config = Hooks::getTrackerConfig( null );
 
 		$this->assertSame( 'auto', $config['protocol'] );
+	}
+
+	public function testGetTrackerConfigDefaultsCustomJsToEmptyArray() {
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertSame( [], $config['customJs'] );
+	}
+
+	public function testGetTrackerConfigReturnsConfiguredCustomJs() {
+		$customJs = [
+			[ 'setDocumentTitle', 'custom title' ],
+			[ 'trackEvent', 'category', 'action' ],
+		];
+		$this->setMwGlobals( 'wgMatomoCustomJS', $customJs );
+
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertSame( $customJs, $config['customJs'] );
 	}
 
 	public function testOnBeforePageDisplayAddsTrackerModule() {

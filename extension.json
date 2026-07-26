@@ -56,6 +56,9 @@
 		},
 		"MatomoIgnoreGroups": {
 			"value": [ "bot", "sysop" ]
+		},
+		"MatomoCustomJS": {
+			"value": []
 		}
 	},
 	"load_composer_autoloader": true,
