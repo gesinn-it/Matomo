@@ -18,4 +18,7 @@ This project adheres to [Semantic Versioning](https://semver.org/) and
 - Pin `eslint-plugin-compat` (via `overrides`) and `jsdom` to the newest releases that still support Node.js 12, fixing `npm test` on the MW 1.35 / PHP 7.4 CI matrix row, whose docker image ships Node 12.22.12.
 - Correct the `getTrackerConfig` PHPDoc: the ResourceLoader context class moved from the global `ResourceLoaderContext` to `MediaWiki\ResourceLoader\Context` in MW 1.39, not 1.36 as previously documented. An audit of all MediaWiki APIs used in `src/Hooks.php` across the 1.35/1.39/1.43 CI matrix found no other cross-version differences requiring a `version_compare()` guard. ([#6](https://github.com/gesinn-it/Matomo/issues/6))
 
+### Docs
+- Add a "Configuration" section to `README-source.adoc` documenting all `$wgMatomo*` variables (`MatomoURL`, `MatomoIDSite`, `MatomoProtocol`, `MatomoIgnoreGroups`, `MatomoCustomJS`) with their defaults and behavior. ([#7](https://github.com/gesinn-it/Matomo/issues/7))
+
 [Unreleased]: https://github.com/gesinn-it/Matomo/compare/main...HEAD

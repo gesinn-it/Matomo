@@ -12,6 +12,35 @@ sequence — no personally identifiable information is collected.
 
 For Matomo itself see https://matomo.org[matomo.org].
 
+== Configuration
+
+Set these variables in `LocalSettings.php` after loading the extension.
+
+[cols="1,1,3", options="header"]
+|===
+|Variable |Default |Description
+
+|`$wgMatomoURL`
+|`""`
+|Hostname (and optional path) of the Matomo instance to send pageview data to, e.g. `matomo.example.org`. Tracking is disabled while this is empty.
+
+|`$wgMatomoIDSite`
+|`""`
+|The numeric Matomo site ID to record pageviews under. Tracking is disabled while this is empty.
+
+|`$wgMatomoProtocol`
+|`"auto"`
+|Protocol used to load the Matomo tracker script: `"auto"` (mirrors the current page's protocol), `"http"`, or `"https"`.
+
+|`$wgMatomoIgnoreGroups`
+|`[ "bot", "sysop" ]`
+|User groups excluded from pageview tracking. A user is excluded if they belong to at least one listed group. Set to `[]` to track all users.
+
+|`$wgMatomoCustomJS`
+|`[]`
+|A list of extra `_paq` commands to push after the core tracking commands, e.g. `[ [ "setDocumentTitle", "custom title" ], [ "trackEvent", "category", "action" ] ]`. Lets administrators extend tracking (custom variables, events, etc.) without patching the extension.
+|===
+
 == Testing
 
 Local testing and CI are supported by Docker and Make:
