@@ -134,7 +134,9 @@ class Hooks implements
 	/**
 	 * ResourceLoader packageFiles callback providing tracker config to ext.matomo.tracker.
 	 *
-	 * @param mixed $context ResourceLoaderContext (MW < 1.36) or MediaWiki\ResourceLoader\Context (MW >= 1.36)
+	 * @param mixed $context ResourceLoaderContext (MW < 1.39) or MediaWiki\ResourceLoader\Context (MW >= 1.39);
+	 *   left untyped since the callback only needs config values, not context methods, so no
+	 *   version_compare() guard is required for either MW version boundary in this class
 	 * @return array
 	 */
 	public static function getTrackerConfig( $context ): array {
