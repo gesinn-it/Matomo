@@ -4,17 +4,62 @@ declare( strict_types=1 );
 
 namespace MediaWiki\Extension\Matomo;
 
+use ISearchResultSet;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\SkinAfterBottomScriptsHook;
+use MediaWiki\Hook\SpecialSearchResultsHook;
+use MediaWiki\Hook\SpecialSearchSetupEngineHook;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserIdentity;
 use OutputPage;
+use SearchEngine;
 use Skin;
+use SpecialSearch;
 
 /**
  * Hooks for the Matomo extension
  */
-class Hooks implements BeforePageDisplayHook, SkinAfterBottomScriptsHook {
+class Hooks implements
+	BeforePageDisplayHook,
+	SkinAfterBottomScriptsHook,
+	SpecialSearchResultsHook,
+	SpecialSearchSetupEngineHook
+{
+
+	/**
+	 * Searched term on Special:Search, or null if the current request is not a search.
+	 *
+	 * Hook handler classes registered without a "services" spec are instantiated
+	 * anew per hook call, so this can't be an instance property: it must survive
+	 * from onSpecialSearchResults/onSpecialSearchSetupEngine through to the
+	 * ResourceLoader packageFiles callback later in the same request.
+	 *
+	 * @var string|null
+	 */
+	private static $searchTerm;
+
+	/**
+	 * Number of results for the current Special:Search request.
+	 *
+	 * @var int|null
+	 */
+	private static $searchCount;
+
+	/**
+	 * Search profile/category for the current Special:Search request.
+	 *
+	 * @var string|null
+	 */
+	private static $searchCategory;
+
+	/**
+	 * Resets the per-request search tracking state. Test-only.
+	 */
+	public static function resetSearchState(): void {
+		self::$searchTerm = null;
+		self::$searchCount = null;
+		self::$searchCategory = null;
+	}
 
 	/**
 	 * Placeholder hook implementation. Tracking output is added in a later phase.
@@ -23,6 +68,35 @@ class Hooks implements BeforePageDisplayHook, SkinAfterBottomScriptsHook {
 	 * @param string &$text
 	 */
 	public function onSkinAfterBottomScripts( $skin, &$text ): void {
+	}
+
+	/**
+	 * Captures the search term and result count on Special:Search.
+	 *
+	 * @param string $term
+	 * @param ISearchResultSet|null &$titleMatches
+	 * @param ISearchResultSet|null &$textMatches
+	 */
+	public function onSpecialSearchResults( $term, &$titleMatches, &$textMatches ): void {
+		self::$searchTerm = $term;
+		self::$searchCount = 0;
+		if ( $titleMatches instanceof ISearchResultSet ) {
+			self::$searchCount += $titleMatches->numRows();
+		}
+		if ( $textMatches instanceof ISearchResultSet ) {
+			self::$searchCount += $textMatches->numRows();
+		}
+	}
+
+	/**
+	 * Captures the search profile (category) on Special:Search.
+	 *
+	 * @param SpecialSearch $search
+	 * @param string $profile
+	 * @param SearchEngine $engine
+	 */
+	public function onSpecialSearchSetupEngine( $search, $profile, $engine ): void {
+		self::$searchCategory = $profile;
 	}
 
 	/**
@@ -70,6 +144,25 @@ class Hooks implements BeforePageDisplayHook, SkinAfterBottomScriptsHook {
 			'url' => $config->get( 'MatomoURL' ),
 			'idSite' => $config->get( 'MatomoIDSite' ),
 			'protocol' => $config->get( 'MatomoProtocol' ),
+			'search' => self::getSearchConfig(),
+		];
+	}
+
+	/**
+	 * Returns the site search data captured for the current request, or null
+	 * if the current request is not a Special:Search request.
+	 *
+	 * @return array{term:string,count:int,category:string|null}|null
+	 */
+	private static function getSearchConfig(): ?array {
+		if ( self::$searchTerm === null ) {
+			return null;
+		}
+
+		return [
+			'term' => self::$searchTerm,
+			'count' => self::$searchCount ?? 0,
+			'category' => self::$searchCategory,
 		];
 	}
 }

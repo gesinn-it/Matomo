@@ -12,6 +12,11 @@ use MediaWikiIntegrationTestCase;
  */
 class HooksTest extends MediaWikiIntegrationTestCase {
 
+	protected function tearDown(): void {
+		Hooks::resetSearchState();
+		parent::tearDown();
+	}
+
 	public function testOnSkinAfterBottomScriptsDoesNotThrow() {
 		$hooks = new Hooks();
 		$skin = $this->createMock( \Skin::class );
@@ -34,6 +39,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'url' => 'matomo.example.org',
 			'idSite' => '3',
 			'protocol' => 'https',
+			'search' => null,
 		], $config );
 	}
 
@@ -99,5 +105,57 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$userGroupManager = $this->createMock( \MediaWiki\User\UserGroupManager::class );
 		$userGroupManager->method( 'getUserEffectiveGroups' )->willReturn( $effectiveGroups );
 		return $userGroupManager;
+	}
+
+	public function testOnSpecialSearchResultsCountsTitleAndTextMatches() {
+		$hooks = new Hooks();
+		$titleMatches = $this->createMock( \ISearchResultSet::class );
+		$titleMatches->method( 'numRows' )->willReturn( 2 );
+		$textMatches = $this->createMock( \ISearchResultSet::class );
+		$textMatches->method( 'numRows' )->willReturn( 3 );
+
+		$hooks->onSpecialSearchResults( 'wiki', $titleMatches, $textMatches );
+
+		$config = Hooks::getTrackerConfig( null );
+		$this->assertSame( [
+			'term' => 'wiki',
+			'count' => 5,
+			'category' => null,
+		], $config['search'] );
+	}
+
+	public function testOnSpecialSearchResultsHandlesNullResultSets() {
+		$hooks = new Hooks();
+		$titleMatches = null;
+		$textMatches = null;
+
+		$hooks->onSpecialSearchResults( 'wiki', $titleMatches, $textMatches );
+
+		$config = Hooks::getTrackerConfig( null );
+		$this->assertSame( [
+			'term' => 'wiki',
+			'count' => 0,
+			'category' => null,
+		], $config['search'] );
+	}
+
+	public function testOnSpecialSearchSetupEngineStoresProfileAsCategory() {
+		$hooks = new Hooks();
+		$search = $this->createMock( \SpecialSearch::class );
+		$engine = $this->createMock( \SearchEngine::class );
+		$titleMatches = null;
+		$textMatches = null;
+
+		$hooks->onSpecialSearchResults( 'wiki', $titleMatches, $textMatches );
+		$hooks->onSpecialSearchSetupEngine( $search, 'advanced', $engine );
+
+		$config = Hooks::getTrackerConfig( null );
+		$this->assertSame( 'advanced', $config['search']['category'] );
+	}
+
+	public function testGetTrackerConfigSearchIsNullWithoutASearch() {
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertNull( $config['search'] );
 	}
 }

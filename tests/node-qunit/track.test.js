@@ -69,3 +69,30 @@ QUnit.test( 'track reuses an existing window._paq array', ( assert ) => {
 		[ 'setSiteId', '3' ]
 	] );
 } );
+
+QUnit.test( 'track pushes trackSiteSearch instead of trackPageView when search data is present', ( assert ) => {
+	track( {
+		url: 'matomo.example.org',
+		idSite: '3',
+		protocol: 'https',
+		search: { term: 'wiki', count: 5, category: null }
+	} );
+
+	assert.deepEqual( window._paq, [
+		[ 'trackSiteSearch', 'wiki', null, 5 ],
+		[ 'enableLinkTracking' ],
+		[ 'setTrackerUrl', 'https://matomo.example.org/matomo.php' ],
+		[ 'setSiteId', '3' ]
+	] );
+} );
+
+QUnit.test( 'track passes the search category to trackSiteSearch when present', ( assert ) => {
+	track( {
+		url: 'matomo.example.org',
+		idSite: '3',
+		protocol: 'https',
+		search: { term: 'wiki', count: 0, category: 'advanced' }
+	} );
+
+	assert.deepEqual( window._paq[ 0 ], [ 'trackSiteSearch', 'wiki', 'advanced', 0 ] );
+} );
