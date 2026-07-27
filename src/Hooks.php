@@ -148,6 +148,7 @@ class Hooks implements
 			'protocol' => $config->get( 'MatomoProtocol' ),
 			'search' => self::getSearchConfig(),
 			'customJs' => $config->get( 'MatomoCustomJS' ),
+			'disableCookies' => $config->get( 'MatomoDisableCookies' ),
 		];
 	}
 

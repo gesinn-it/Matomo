@@ -32,6 +32,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'wgMatomoURL' => 'matomo.example.org',
 			'wgMatomoIDSite' => '3',
 			'wgMatomoProtocol' => 'https',
+			'wgMatomoDisableCookies' => true,
 		] );
 		$config = Hooks::getTrackerConfig( null );
 
@@ -41,6 +42,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'protocol' => 'https',
 			'search' => null,
 			'customJs' => [],
+			'disableCookies' => true,
 		], $config );
 	}
 
@@ -71,6 +73,20 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$config = Hooks::getTrackerConfig( null );
 
 		$this->assertSame( $customJs, $config['customJs'] );
+	}
+
+	public function testGetTrackerConfigDefaultsDisableCookiesToTrue() {
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertTrue( $config['disableCookies'] );
+	}
+
+	public function testGetTrackerConfigReturnsConfiguredDisableCookies() {
+		$this->setMwGlobals( 'wgMatomoDisableCookies', false );
+
+		$config = Hooks::getTrackerConfig( null );
+
+		$this->assertFalse( $config['disableCookies'] );
 	}
 
 	public function testOnBeforePageDisplayAddsTrackerModule() {

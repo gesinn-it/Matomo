@@ -39,6 +39,10 @@ Set these variables in `LocalSettings.php` after loading the extension.
 |`$wgMatomoCustomJS`
 |`[]`
 |A list of extra `_paq` commands to push after the core tracking commands, e.g. `[ [ "setDocumentTitle", "custom title" ], [ "trackEvent", "category", "action" ] ]`. Lets administrators extend tracking (custom variables, events, etc.) without patching the extension.
+
+|`$wgMatomoDisableCookies`
+|`true`
+|Whether to push Matomo's `disableCookies` command before the core tracking commands, so tracking sets no first-party cookies regardless of the Matomo server configuration. Set to `false` to allow cookie-based tracking.
 |===
 
 == Testing

@@ -25,6 +25,8 @@ const resolveBaseUrl = function ( config ) {
  * URL and site ID. Pushes a trackSiteSearch command instead of the
  * default trackPageView when config.search is set (Special:Search).
  * Appends any admin-configured customJs entries after the core commands.
+ * Pushes disableCookies before the core commands when config.disableCookies
+ * is set, so tracking never sets first-party cookies.
  *
  * @param {Object} config
  * @param {Object|null} [config.search]
@@ -32,6 +34,7 @@ const resolveBaseUrl = function ( config ) {
  * @param {string|null} [config.search.category]
  * @param {number} [config.search.count]
  * @param {Array[]} [config.customJs]
+ * @param {boolean} [config.disableCookies]
  */
 const track = function ( config ) {
 	if ( !config.url || !config.idSite ) {
@@ -41,6 +44,9 @@ const track = function ( config ) {
 	const baseUrl = resolveBaseUrl( config );
 	// eslint-disable-next-line no-underscore-dangle
 	const paq = window._paq = window._paq || [];
+	if ( config.disableCookies ) {
+		paq.push( [ 'disableCookies' ] );
+	}
 	if ( config.search ) {
 		paq.push( [
 			'trackSiteSearch',

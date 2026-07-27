@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](https://semver.org/) and
 
 ## [Unreleased]
 
+### Added
+- Add `$wgMatomoDisableCookies` configuration (default: `true`): pushes Matomo's `disableCookies` command before the core tracking commands, so the extension itself guarantees cookie-less tracking regardless of how the Matomo server is configured, supporting consent-free analytics under GDPR.
+
 ## [1.0.0] - 2026-07-27
 
 Initial release: privacy-friendly Matomo pageview and site-search tracking for MediaWiki.

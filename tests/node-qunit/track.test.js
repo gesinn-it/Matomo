@@ -128,3 +128,26 @@ QUnit.test( 'track does not push anything extra when customJs is absent or empty
 		[ 'setSiteId', '3' ]
 	] );
 } );
+
+QUnit.test( 'track pushes disableCookies before the core commands when configured', ( assert ) => {
+	track( { url: 'matomo.example.org', idSite: '3', protocol: 'https', disableCookies: true } );
+
+	assert.deepEqual( window._paq, [
+		[ 'disableCookies' ],
+		[ 'trackPageView' ],
+		[ 'enableLinkTracking' ],
+		[ 'setTrackerUrl', 'https://matomo.example.org/matomo.php' ],
+		[ 'setSiteId', '3' ]
+	] );
+} );
+
+QUnit.test( 'track does not push disableCookies when not configured', ( assert ) => {
+	track( { url: 'matomo.example.org', idSite: '3', protocol: 'https', disableCookies: false } );
+
+	assert.deepEqual( window._paq, [
+		[ 'trackPageView' ],
+		[ 'enableLinkTracking' ],
+		[ 'setTrackerUrl', 'https://matomo.example.org/matomo.php' ],
+		[ 'setSiteId', '3' ]
+	] );
+} );
